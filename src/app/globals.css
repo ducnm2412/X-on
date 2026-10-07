@@ -1,26 +1,498 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* White with a bright, clear pink. Text stays near-black wine so it reads sharply. */
+  --color-blush: #ffe8f0;
+  --color-petal: #ffbfd6;
+  --color-rose: #ff4d8d;
+  --color-lacquer: #d81b60;
+  --color-wine: #3a0f1f;
+  --color-mauve: #5f3a49;
+  --color-line: #ffd0df;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-bodoni), "Bodoni MT", Didot, serif;
+  --font-sans: var(--font-instrument), "Segoe UI", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --radius-box: 0.75rem;
+
+  --animate-press: press 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
+  --animate-rise: rise 0.25s ease-out both;
+  --animate-slide: slide 0.28s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-reveal: reveal 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+  --animate-unroll: unroll 1.7s cubic-bezier(0.65, 0, 0.2, 1) both;
+
+  /* Header bar: starts as a small pill holding only the logo, then unrolls to the right
+     until the whole navigation is showing, like a loading bar filling up. */
+  @keyframes unroll {
+    0%,
+    30% {
+      clip-path: inset(0 calc(100% - 9rem) 0 0 round 999px);
+    }
+    88% {
+      clip-path: inset(0 0 0 0 round 999px);
+    }
+    /* Let go of the clip at the end so the bar's soft shadow can show. */
+    100% {
+      clip-path: none;
+    }
+  }
+
+  /* Hero text: each phrase wipes up into place. */
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(0.55em);
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      clip-path: inset(-0.6em);
+    }
+  }
+
+  @keyframes press {
+    from {
+      opacity: 0;
+      transform: translateY(-28px) scale(1.06);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes slide {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  html {
+    overflow-x: clip;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+  body {
+    overflow-x: clip;
+    background: #fff;
+    color: var(--color-wine);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-lacquer);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--color-petal);
+  }
+  button,
+  summary,
+  [role="tab"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@layer components {
+  .wrap {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Display type: Bodoni, like the X in the logo. */
+  .d1,
+  .d2,
+  .d3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+  }
+  /* Bodoni's hairlines vanish when small, so pin a sturdier optical size per step. */
+  .font-display,
+  .d3,
+  .prose-x h2 {
+    font-variation-settings: "opsz" 9;
+  }
+  .d2 {
+    font-variation-settings: "opsz" 18;
+  }
+  .d1 {
+    font-variation-settings: "opsz" 34;
+  }
+  .d1 {
+    font-size: clamp(2.9rem, 8.2vw, 6.75rem);
+    line-height: 0.94;
+  }
+  .d2 {
+    font-size: clamp(2.1rem, 4.6vw, 3.6rem);
+    line-height: 1.02;
+  }
+  .d3 {
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+    line-height: 1.15;
+  }
+  .lede {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--color-mauve);
+    max-width: 34rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.6rem 1.5rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-lacquer);
+    background: var(--color-lacquer);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    text-align: center;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s,
+      color 0.15s;
+  }
+  .btn:hover {
+    background: var(--color-wine);
+    border-color: var(--color-wine);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    background: var(--color-line);
+    border-color: var(--color-line);
+    color: var(--color-mauve);
+  }
+  .btn-line {
+    background: #fff;
+    color: var(--color-lacquer);
+  }
+  .btn-line:hover {
+    background: var(--color-lacquer);
+    border-color: var(--color-lacquer);
+    color: #fff;
+  }
+  .btn-sm {
+    min-height: 2.4rem;
+    padding: 0.35rem 1rem;
+    font-size: 0.875rem;
+  }
+  .btn-danger {
+    background: #a3123f;
+    border-color: #a3123f;
+  }
+  .btn-danger:hover {
+    background: var(--color-wine);
+    border-color: var(--color-wine);
+  }
+
+  .link {
+    color: var(--color-lacquer);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+  }
+  .link:hover {
+    color: var(--color-wine);
+  }
+
+  .label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+  .input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid var(--color-petal);
+    background: #fff;
+    color: var(--color-wine);
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .input::placeholder {
+    color: #b497a0;
+  }
+  .input:hover {
+    border-color: var(--color-rose);
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-lacquer);
+    box-shadow: 0 0 0 3px var(--color-petal);
+  }
+  .input[aria-invalid="true"] {
+    border-color: var(--color-lacquer);
+    background: var(--color-blush);
+  }
+  .input:disabled {
+    background: var(--color-blush);
+    color: var(--color-mauve);
+  }
+  select.input {
+    appearance: none;
+    padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%233a0f1f' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.75rem;
+  }
+  .check {
+    appearance: none;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.15rem;
+    border-radius: 0.35rem;
+    border: 1.5px solid var(--color-rose);
+    background: #fff;
+  }
+  .check:checked {
+    border-color: var(--color-lacquer);
+    background: var(--color-lacquer)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 10'%3E%3Cpath d='M1.5 5.2l3 3 6-6.5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 0.7rem no-repeat;
+  }
+
+  /* The clear box every set ships in. */
+  .box {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-box);
+    background: var(--color-blush);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: var(--color-blush);
+    color: var(--color-wine);
+    white-space: nowrap;
+  }
+  .chip-good {
+    background: #e3f4ea;
+    color: #1d5b3a;
+  }
+  .chip-warn {
+    background: #fdefd3;
+    color: #77510a;
+  }
+  .chip-bad {
+    background: var(--color-petal);
+    color: #8a1c35;
+  }
+  .chip-mute {
+    background: #f1eef0;
+    color: #5d5257;
+  }
+
+  .prose-x h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.15;
+    margin-top: 2.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .prose-x p,
+  .prose-x ul {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    margin-bottom: 1.1rem;
+    max-width: 40rem;
+  }
+  .prose-x ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-x li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.4rem;
+  }
+  .prose-x li::before {
+    content: "";
+    position: absolute;
+    left: 0.15rem;
+    top: 0.5rem;
+    width: 0.5rem;
+    height: 0.8rem;
+    border-radius: 50% 50% 35% 35%;
+    background: var(--color-rose);
+  }
+
+  .table-x {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.925rem;
+  }
+  .table-x th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--color-mauve);
+    padding: 0.75rem 1rem;
+    border-bottom: 1.5px solid var(--color-line);
+    white-space: nowrap;
+  }
+  .table-x td {
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--color-line);
+    vertical-align: middle;
+  }
+  .table-x tbody tr:hover {
+    background: var(--color-blush);
+  }
+}
+
+/* Decorative backdrops: pink line art and paper grain laid behind a section's content.
+   The art sits in a ::before layer so its strength can be set without touching the text. */
+.deco {
+  position: relative;
+  isolation: isolate;
+}
+.deco::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  opacity: var(--deco-o, 0.32);
+}
+/* Flowers growing in from both sides. */
+.deco-flora::before {
+  background-image:
+    url("/background/flora.webp"), url("/background/flora.webp");
+  background-position:
+    left -7rem center,
+    right -7rem center;
+  background-size:
+    auto 135%,
+    auto 135%;
+}
+/* Leaves trailing down the right-hand side. */
+.deco-leaf::before {
+  background-image: url("/background/leaf.webp");
+  background-position: right -3rem top -2rem;
+  background-size: auto 125%;
+}
+/* Leaves on the left instead. */
+.deco-leaf-l::before {
+  background-image: url("/background/leaf.webp");
+  background-position: left -4rem bottom -2rem;
+  background-size: auto 125%;
+}
+/* Paper grain over the whole band. */
+.deco-paper::before {
+  background-image: url("/background/paper.jpg");
+  background-repeat: repeat;
+  background-size: 34rem auto;
+  mix-blend-mode: multiply;
+  opacity: 0.55;
+}
+/* Flowers in white, for the strong pink bands. */
+.deco-white::before {
+  filter: brightness(0) invert(1);
+  --deco-o: 0.4;
+}
+@media (max-width: 767px) {
+  .deco::before {
+    opacity: calc(var(--deco-o, 0.32) * 0.7);
+  }
+  .deco-flora::before {
+    background-image: url("/background/flora.webp");
+    background-position: right -6rem top;
+    background-size: auto 100%;
+  }
+}
+
+/* Scroll reveal: blocks glide in from the direction of travel and glide back out,
+   whether the page is scrolled down or back up. Driven by components/Reveal.tsx. */
+.rv {
+  transition:
+    opacity 0.75s cubic-bezier(0.2, 0.7, 0.1, 1),
+    transform 0.75s cubic-bezier(0.2, 0.7, 0.1, 1);
+  transition-delay: var(--rv-delay, 0ms);
+  will-change: opacity, transform;
+}
+.rv[data-rv="below"] {
+  opacity: 0;
+  transform: translateY(3.5rem);
+  transition-delay: 0ms;
+}
+.rv[data-rv="above"] {
+  opacity: 0;
+  transform: translateY(-3.5rem);
+  transition-delay: 0ms;
+}
+
+/* Other ways in: from the left, from the right, or growing from slightly small. */
+.rv[data-from="left"]:not([data-rv="in"]) {
+  transform: translateX(-5rem);
+}
+.rv[data-from="right"]:not([data-rv="in"]) {
+  transform: translateX(5rem);
+}
+.rv[data-from="zoom"]:not([data-rv="in"]) {
+  transform: scale(0.86);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
