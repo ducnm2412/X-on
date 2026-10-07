@@ -66,10 +66,10 @@ export function Confirm({ name, what, onCancel, onConfirm }: { name: string; wha
 
 export function PageTitle({ title, text, children }: { title: string; text?: string; children?: React.ReactNode }) {
   return (
-    <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+    <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
       <div>
-        <h1 className="font-display text-[clamp(2rem,3.4vw,2.75rem)] leading-none font-medium">{title}</h1>
-        {text && <p className="mt-2 text-mauve">{text}</p>}
+        <h1 className="font-display text-[clamp(1.6rem,2.4vw,2rem)] leading-none font-semibold">{title}</h1>
+        {text && <p className="mt-1.5 text-mauve">{text}</p>}
       </div>
       {children && <div className="flex flex-wrap gap-2">{children}</div>}
     </div>
@@ -149,7 +149,7 @@ export function Empty({ title, text, children }: { title: string; text: string; 
 }
 
 export function TableWrap({ children }: { children: React.ReactNode }) {
-  return <div className="overflow-x-auto rounded-xl border-[1.5px] border-line">{children}</div>;
+  return <div className="overflow-x-auto rounded-xl border-[1.5px] border-line bg-white">{children}</div>;
 }
 
 const onHash = (cb: () => void) => {

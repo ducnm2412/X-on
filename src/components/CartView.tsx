@@ -101,14 +101,14 @@ export function CartView() {
                     Remove
                   </button>
                 </div>
-                <div className="flex w-fit items-center rounded-full border-[1.5px] border-petal" role="group" aria-label={`Quantity of ${i.name}`}>
-                  <button className="grid place-items-center size-10 rounded-full text-lg hover:bg-blush disabled:text-petal" aria-label="Decrease quantity" disabled={i.qty <= 1} onClick={() => setCartQty(i.key, i.qty - 1)}>
+                <div className="flex w-fit items-center rounded-md border-[1.5px] border-petal" role="group" aria-label={`Quantity of ${i.name}`}>
+                  <button className="grid place-items-center size-10 rounded-md text-lg hover:bg-blush disabled:text-petal" aria-label="Decrease quantity" disabled={i.qty <= 1} onClick={() => setCartQty(i.key, i.qty - 1)}>
                     −
                   </button>
                   <output className="w-7 text-center font-semibold" aria-live="polite">
                     {i.qty}
                   </output>
-                  <button className="grid place-items-center size-10 rounded-full text-lg hover:bg-blush disabled:text-petal" aria-label="Increase quantity" disabled={i.qty >= 10} onClick={() => setCartQty(i.key, i.qty + 1)}>
+                  <button className="grid place-items-center size-10 rounded-md text-lg hover:bg-blush disabled:text-petal" aria-label="Increase quantity" disabled={i.qty >= 10} onClick={() => setCartQty(i.key, i.qty + 1)}>
                     +
                   </button>
                 </div>

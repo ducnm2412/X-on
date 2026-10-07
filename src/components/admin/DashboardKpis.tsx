@@ -17,16 +17,16 @@ export function DashboardKpis() {
 
   return (
     <section aria-label="Overview">
-      <dl className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-6 overflow-hidden rounded-xl bg-blush gap-px [&>div]:bg-white border-[1.5px] border-blush">
+      <dl className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
         {kpis.map(([href, label, value, note]) => (
-          <div key={label} className="relative p-5 hover:!bg-blush">
-            <dt className="text-sm font-semibold text-mauve">
+          <div key={label} className="relative rounded-xl border-[1.5px] border-line border-l-4 border-l-lacquer bg-white px-4 py-3 hover:bg-blush">
+            <dt className="text-sm font-semibold">
               <Link href={href} className="after:absolute after:inset-0">
                 {label}
               </Link>
             </dt>
-            <dd className="mt-2 font-display text-5xl leading-none">{value}</dd>
-            <dd className="mt-2 text-sm text-mauve">{note}</dd>
+            <dd className="mt-1 text-3xl font-bold leading-none text-lacquer">{value}</dd>
+            <dd className="mt-1.5 text-sm text-mauve">{note}</dd>
           </div>
         ))}
       </dl>

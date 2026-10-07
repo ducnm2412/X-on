@@ -23,7 +23,7 @@ function swap<T>(list: T[], i: number, by: number) {
 }
 
 function Arrows({ i, last, name, onMove }: { i: number; last: number; name: string; onMove: (by: number) => void }) {
-  const cls = "grid place-items-center size-9 rounded-full hover:bg-blush disabled:text-petal disabled:hover:bg-transparent";
+  const cls = "grid place-items-center size-9 rounded-md hover:bg-blush disabled:text-petal disabled:hover:bg-transparent";
   return (
     <span className="inline-flex">
       <button type="button" className={cls} aria-label={`Move ${name} up`} disabled={i === 0} onClick={() => onMove(-1)}>

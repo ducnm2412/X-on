@@ -45,9 +45,9 @@ export function ProductCard({ p, priority }: { p: Product; priority?: boolean })
       <Link href={`/product/${p.slug}`} className="box block aspect-square" aria-label={p.name}>
         <ProductImage p={p} priority={priority} />
         {off > 0 && !out && (
-          <span className="absolute left-3 top-3 rounded-full bg-lacquer px-2.5 py-1 text-xs font-bold text-white">Save {off}%</span>
+          <span className="absolute left-3 top-3 rounded-sm bg-lacquer px-2.5 py-1 text-xs font-bold text-white">Save {off}%</span>
         )}
-        {out && <span className="absolute left-3 top-3 rounded-full bg-white px-2.5 py-1 text-xs font-bold">Sold out</span>}
+        {out && <span className="absolute left-3 top-3 rounded-sm bg-white px-2.5 py-1 text-xs font-bold">Sold out</span>}
       </Link>
       <div className="mt-3 flex flex-col gap-x-3 gap-y-0.5 sm:flex-row sm:items-start sm:justify-between">
         <h3 className="font-semibold text-[1.05rem] leading-snug">

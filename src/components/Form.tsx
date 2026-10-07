@@ -49,6 +49,7 @@ export function DemoForm({
   again = "Send another",
   footer,
   onSuccess,
+  check,
 }: {
   id: string;
   fields: FieldDef[];
@@ -60,11 +61,14 @@ export function DemoForm({
   footer?: React.ReactNode;
   /** Runs once the form has been accepted, for example to move to another page. */
   onSuccess?: () => void;
+  /** Runs after validation. Return a [title, detail] pair to reject the values, or null to accept. */
+  check?: (values: Record<string, string>) => [string, string] | null;
 }) {
   const initial = Object.fromEntries(fields.map((f) => [f.name, f.value ?? ""]));
   const [values, setValues] = useState<Record<string, string>>(initial);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "failed">("idle");
+  const [problem, setProblem] = useState<[string, string] | null>(null);
 
   const change = (name: string, v: string) => {
     setValues((s) => ({ ...s, [name]: v }));
@@ -83,8 +87,11 @@ export function DemoForm({
     setStatus("loading");
     const fail = Object.values(values).some((v) => v.endsWith("@fail.test"));
     setTimeout(() => {
-      setStatus(fail ? "failed" : "success");
-      if (!fail) onSuccess?.();
+      const rejected = fail ? null : (check?.(values) ?? null);
+      setProblem(rejected);
+      const ok = !fail && !rejected;
+      setStatus(ok ? "success" : "failed");
+      if (ok) onSuccess?.();
     }, 1000);
   }
 
@@ -110,8 +117,8 @@ export function DemoForm({
     <form onSubmit={submit} noValidate className="grid gap-5 sm:grid-cols-2">
       {status === "failed" && (
         <div role="alert" className="sm:col-span-2 rounded-lg border-[1.5px] border-lacquer bg-blush px-5 py-4">
-          <p className="font-semibold">Not sent. We could not reach the server.</p>
-          <p className="text-sm text-mauve">Your details are still in the form. Check your connection and send again, or call 689-212-8888.</p>
+          <p className="font-semibold">{problem ? problem[0] : "Not sent. We could not reach the server."}</p>
+          <p className="text-sm text-mauve">{problem ? problem[1] : "Your details are still in the form. Check your connection and send again, or call 689-212-8888."}</p>
         </div>
       )}
       {fields.map((f) => {

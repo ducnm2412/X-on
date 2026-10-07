@@ -46,7 +46,7 @@ export function Crumbs({ items }: { items: [string, string?][] }) {
 
 export function Pagination({ page, pages, onPage, label }: { page: number; pages: number; onPage: (p: number) => void; label: string }) {
   if (pages <= 1) return null;
-  const item = "grid place-items-center h-11 min-w-11 px-3 rounded-full font-semibold border-[1.5px]";
+  const item = "grid place-items-center h-11 min-w-11 px-3 rounded-md font-semibold border-[1.5px]";
   return (
     <nav aria-label={label} className="mt-12 flex items-center justify-center gap-2">
       <button className={`${item} border-transparent hover:bg-blush disabled:text-mauve/50 disabled:hover:bg-transparent`} disabled={page === 1} onClick={() => onPage(page - 1)}>

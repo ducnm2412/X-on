@@ -24,10 +24,10 @@ export type PlacedOrder = {
   total: number;
 };
 
-type State = { products: Product[]; cart: CartItem[]; promo: string | null; lastOrder: PlacedOrder | null; toasts: Toast[] };
+type State = { products: Product[]; cart: CartItem[]; promo: string | null; lastOrder: PlacedOrder | null; admin: boolean; toasts: Toast[] };
 
-const KEYS = { products: "xon-products-v2", cart: "xon-cart-v1", promo: "xon-promo-v1", lastOrder: "xon-order-v1" } as const;
-const seed: State = { products: PRODUCTS, cart: [], promo: null, lastOrder: null, toasts: [] };
+const KEYS = { products: "xon-products-v2", cart: "xon-cart-v1", promo: "xon-promo-v1", lastOrder: "xon-order-v1", admin: "xon-admin-v1" } as const;
+const seed: State = { products: PRODUCTS, cart: [], promo: null, lastOrder: null, admin: false, toasts: [] };
 let state: State = seed;
 let loaded = false;
 const listeners = new Set<() => void>();
@@ -49,7 +49,7 @@ function snapshot() {
       const saved: Partial<State> = {};
       for (const k of Object.keys(KEYS) as (keyof typeof KEYS)[]) {
         const raw = localStorage.getItem(KEYS[k]);
-        if (raw) saved[k] = JSON.parse(raw);
+        if (raw) (saved as Record<string, unknown>)[k] = JSON.parse(raw);
       }
       state = { ...state, ...saved };
     } catch {
@@ -73,12 +73,41 @@ function persist(next: Partial<Pick<State, keyof typeof KEYS>>) {
   try {
     for (const k of Object.keys(next) as (keyof typeof KEYS)[]) {
       const v = next[k];
-      if (v === null || v === undefined) localStorage.removeItem(KEYS[k]);
+      if (v === null || v === undefined || v === false) localStorage.removeItem(KEYS[k]);
       else localStorage.setItem(KEYS[k], JSON.stringify(v));
     }
   } catch {
     // Ignore: the change still applies for this visit.
   }
+}
+
+/* Admin account */
+
+// The one admin account for this front-end build. There is no server yet, so the check
+// happens in the browser: it keeps casual visitors out of /admin but is not real security.
+// A production build replaces this with server-side authentication.
+export const ADMIN_ACCOUNT = { username: "admin", email: "admin@x-on.shop", password: "Xon@2026" };
+
+export const useAdmin = () => useStore((s) => s.admin);
+
+const noop = () => () => {};
+/** False while the page is still being hydrated, so stored state is not judged too early. */
+export const useHydrated = () =>
+  useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  );
+
+export function loginAdmin(user: string, password: string) {
+  const u = user.trim().toLowerCase();
+  const ok = (u === ADMIN_ACCOUNT.username || u === ADMIN_ACCOUNT.email) && password === ADMIN_ACCOUNT.password;
+  if (ok) persist({ admin: true });
+  return ok;
+}
+
+export function logoutAdmin() {
+  persist({ admin: false });
 }
 
 /* Products */

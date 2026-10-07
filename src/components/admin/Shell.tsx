@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { logoutAdmin, useAdmin, useHydrated } from "@/lib/store";
 import { Logo } from "../Header";
 
 const NAV = [
@@ -17,13 +18,35 @@ const NAV = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const admin = useAdmin();
+  const hydrated = useHydrated();
+
+  // Anyone who is not signed in is sent to the log in page.
+  useEffect(() => {
+    if (hydrated && !admin) router.replace("/my-account");
+  }, [hydrated, admin, router]);
+
+  if (!hydrated || !admin)
+    return (
+      <div className="grid flex-1 place-items-center p-10 text-center">
+        <p className="text-mauve" role="status">
+          {hydrated ? "Log in to open the admin. Taking you to the log in page…" : "Checking your log in…"}
+        </p>
+      </div>
+    );
+
+  const logout = () => {
+    logoutAdmin();
+    router.replace("/my-account");
+  };
 
   const nav = (
     <nav aria-label="Admin" className="flex flex-col gap-1">
       {NAV.map(([href, label]) => {
         const active = pathname === href;
         return (
-          <Link key={href} href={href} aria-current={active ? "page" : undefined} onClick={() => setOpen(false)} className={`rounded-full px-4 py-2.5 font-medium ${active ? "bg-lacquer text-white" : "hover:bg-petal"}`}>
+          <Link key={href} href={href} aria-current={active ? "page" : undefined} onClick={() => setOpen(false)} className={`rounded-lg px-3 py-2 text-[0.95rem] font-semibold ${active ? "bg-white text-lacquer" : "text-white hover:bg-white/15"}`}>
             {label}
           </Link>
         );
@@ -32,18 +55,23 @@ export function Shell({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="flex-1 lg:grid lg:grid-cols-[17rem_1fr]">
-      <aside className="hidden lg:flex flex-col gap-6 bg-blush p-5 sticky top-0 h-screen overflow-y-auto">
-        <div>
-          <Logo className="h-14 w-fit" />
-          <p className="mt-1 px-1 text-sm font-semibold text-mauve">Admin</p>
+    <div className="admin flex-1 bg-[#fff7fa] lg:grid lg:grid-cols-[14.5rem_1fr]">
+      <aside className="hidden lg:flex flex-col gap-5 bg-lacquer p-4 sticky top-0 h-screen overflow-y-auto">
+        <div className="flex items-center gap-3">
+          <div className="rounded-lg bg-white px-2.5 py-1.5">
+            <Logo className="h-9 w-fit" />
+          </div>
+          <p className="font-semibold text-white">Admin</p>
         </div>
         {nav}
-        <div className="mt-auto space-y-3 px-1 text-sm">
-          <Link href="/" className="link">
+        <div className="mt-auto space-y-3 text-sm">
+          <Link href="/" className="block px-3 font-semibold text-white underline underline-offset-4 hover:no-underline">
             View storefront
           </Link>
-          <p className="text-mauve">Signed in as Admin. Demo data only, nothing is sent to a server.</p>
+          <p className="px-3 text-white/85">Signed in as admin.</p>
+          <button className="btn btn-sm w-full !border-white !bg-white !text-lacquer hover:!bg-blush" onClick={logout}>
+            Log out
+          </button>
         </div>
       </aside>
 
@@ -56,14 +84,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </button>
         </header>
         {open && (
-          <div id="admin-menu" className="lg:hidden border-b border-line bg-blush p-4 animate-rise">
+          <div id="admin-menu" className="lg:hidden bg-lacquer p-4 animate-rise">
             {nav}
-            <Link href="/" className="link mt-4 inline-block px-4">
+            <Link href="/" className="mt-4 inline-block px-3 font-semibold text-white underline underline-offset-4">
               View storefront
             </Link>
+            <button className="btn btn-sm mt-4 ml-4 !border-white !bg-white !text-lacquer" onClick={logout}>
+              Log out
+            </button>
           </div>
         )}
-        <main id="main" className="p-4 sm:p-6 lg:p-10 max-w-[90rem]">
+        <main id="main" className="max-w-[92rem] p-4 text-[0.95rem] sm:p-5 lg:p-7">
           {children}
         </main>
       </div>

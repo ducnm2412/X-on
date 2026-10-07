@@ -42,9 +42,21 @@ const AFTER = [
   { href: "/contact-us", label: "Contact" },
 ];
 
+// A link to the home page goes there as usual. When the visitor is already on the home
+// page there is nowhere to go, so it scrolls back to the top instead.
+function homeOrTop() {
+  if (window.location.pathname === "/")
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 export function Logo({ className = "" }: { className?: string }) {
   return (
-    <Link href="/" aria-label="X-ON home" className={`block ${className}`}>
+    <Link
+      href="/"
+      aria-label="X-ON home"
+      className={`block ${className}`}
+      onClick={homeOrTop}
+    >
       <Image
         src="/logo.png"
         alt="X-ON"
@@ -103,7 +115,7 @@ export function Header() {
     setDrawer(false);
   };
   const navLink =
-    "px-2.5 py-2 rounded-full text-[0.95rem] font-medium hover:text-lacquer";
+    "px-2.5 py-2 rounded-md text-[0.95rem] font-medium hover:text-lacquer";
 
   return (
     <>
@@ -111,20 +123,27 @@ export function Header() {
         Free US shipping on orders over $75. Every set is made by hand in
         Kissimmee, Florida.
       </p>
-      <header className="sticky top-0 z-40 px-3 py-3 md:px-6 pointer-events-none">
+      <header className="sticky top-0 z-40 px-5 py-3 md:px-10 pointer-events-none">
         {/* A floating pill, so the home hero video can run underneath it. */}
         <div
-          className="relative mx-auto max-w-[82rem] pointer-events-auto"
+          className="relative mx-auto max-w-[77rem] pointer-events-auto"
           onMouseLeave={() => setMenu(null)}
         >
-          <div className="animate-unroll flex items-center gap-4 h-[4.25rem] rounded-full border border-line bg-white shadow-[0_10px_34px_-12px_rgb(58_15_31/0.35)] pl-5 pr-2.5 md:pl-7">
+          <div className="animate-unroll flex items-center gap-4 h-[4.25rem] rounded-md border border-line bg-white shadow-[0_10px_34px_-12px_rgb(58_15_31/0.35)] pl-5 pr-2.5 md:pl-7">
             <Logo className="h-11 shrink-0" />
 
             <nav
               aria-label="Main"
               className="hidden xl:flex items-center gap-0.5 mx-auto"
             >
-              <Link href="/" className={navLink} onClick={close}>
+              <Link
+                href="/"
+                className={navLink}
+                onClick={() => {
+                  close();
+                  homeOrTop();
+                }}
+              >
                 Home
               </Link>
               <button
@@ -347,7 +366,10 @@ export function Header() {
                 <Link
                   href="/"
                   className="block py-2.5 font-medium"
-                  onClick={close}
+                  onClick={() => {
+                    close();
+                    homeOrTop();
+                  }}
                 >
                   Home
                 </Link>

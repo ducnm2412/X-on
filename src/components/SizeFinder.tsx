@@ -37,7 +37,7 @@ export function SizeFinder() {
           <legend className="label">Choose a size</legend>
           <div className="flex flex-wrap gap-2.5">
             {SIZES.map((s) => (
-              <label key={s} className={`grid h-12 min-w-16 cursor-pointer place-items-center rounded-full border-[1.5px] px-5 font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-lacquer ${size === s ? "border-lacquer bg-lacquer text-white" : "border-rose bg-white hover:bg-petal"}`}>
+              <label key={s} className={`grid h-12 min-w-16 cursor-pointer place-items-center rounded-md border-[1.5px] px-5 font-semibold transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-lacquer ${size === s ? "border-lacquer bg-lacquer text-white" : "border-rose bg-white hover:bg-petal"}`}>
                 <input type="radio" name="home-size" value={s} className="sr-only" checked={size === s} onChange={() => setSize(s)} />
                 {s}
               </label>

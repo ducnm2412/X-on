@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${instrument.variable} h-full antialiased`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${bodoni.variable} ${instrument.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <noscript>
           <style>{".rv{opacity:1!important;transform:none!important}"}</style>

@@ -20,7 +20,7 @@ export default function Dashboard() {
 
       <DashboardKpis />
 
-      <section aria-labelledby="quick" className="mt-8">
+      <section aria-labelledby="quick" className="mt-5">
         <h2 id="quick" className="sr-only">
           Quick actions
         </h2>
@@ -35,10 +35,10 @@ export default function Dashboard() {
         </ul>
       </section>
 
-      <div className="mt-10 grid gap-10 xl:grid-cols-[1.5fr_1fr] [&>*]:min-w-0">
+      <div className="mt-7 grid gap-6 xl:grid-cols-[1.5fr_1fr] [&>*]:min-w-0">
         <section aria-labelledby="recent-orders">
-          <div className="mb-4 flex items-baseline justify-between">
-            <h2 id="recent-orders" className="font-display text-2xl">
+          <div className="mb-3 flex items-baseline justify-between">
+            <h2 id="recent-orders" className="text-lg font-bold">
               Recent orders
             </h2>
             <Link href="/admin/orders" className="link text-sm">
@@ -73,17 +73,17 @@ export default function Dashboard() {
           </TableWrap>
         </section>
 
-        <div className="space-y-10">
+        <div className="space-y-6">
           <section aria-labelledby="recent-ws">
-            <div className="mb-4 flex items-baseline justify-between">
-              <h2 id="recent-ws" className="font-display text-2xl">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 id="recent-ws" className="text-lg font-bold">
                 Wholesale applications
               </h2>
               <Link href="/admin/users#wholesale" className="link text-sm">
                 Review
               </Link>
             </div>
-            <ul className="divide-y divide-line border-y border-line">
+            <ul className="divide-y divide-line rounded-xl border-[1.5px] border-line bg-white px-4">
               {WHOLESALE.slice(0, 3).map((w) => (
                 <li key={w.id} className="flex items-center justify-between gap-3 py-3">
                   <div className="min-w-0">
@@ -97,15 +97,15 @@ export default function Dashboard() {
           </section>
 
           <section aria-labelledby="recent-inq">
-            <div className="mb-4 flex items-baseline justify-between">
-              <h2 id="recent-inq" className="font-display text-2xl">
+            <div className="mb-3 flex items-baseline justify-between">
+              <h2 id="recent-inq" className="text-lg font-bold">
                 Contact inquiries
               </h2>
               <Link href="/admin/users#inquiries" className="link text-sm">
                 Reply
               </Link>
             </div>
-            <ul className="divide-y divide-line border-y border-line">
+            <ul className="divide-y divide-line rounded-xl border-[1.5px] border-line bg-white px-4">
               {INQUIRIES.slice(0, 3).map((q) => (
                 <li key={q.id} className="py-3">
                   <div className="flex items-center justify-between gap-3">

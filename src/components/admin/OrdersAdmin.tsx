@@ -52,7 +52,7 @@ export function OrdersAdmin() {
         </div>
         <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by status">
           {(["All", ...STATUSES] as const).map((s) => (
-            <button key={s} aria-pressed={filter === s} onClick={() => setFilter(s)} className={`rounded-full border-[1.5px] px-3.5 py-1.5 text-sm font-semibold ${filter === s ? "border-lacquer bg-lacquer text-white" : "border-petal hover:border-rose"}`}>
+            <button key={s} aria-pressed={filter === s} onClick={() => setFilter(s)} className={`rounded-md border-[1.5px] px-3.5 py-1.5 text-sm font-semibold ${filter === s ? "border-lacquer bg-lacquer text-white" : "border-petal hover:border-rose"}`}>
               {s}
               {s !== "All" && <span className="ml-1.5 opacity-70">{count(s)}</span>}
             </button>

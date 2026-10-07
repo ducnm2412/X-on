@@ -13,7 +13,11 @@
   --font-display: var(--font-bodoni), "Bodoni MT", Didot, serif;
   --font-sans: var(--font-instrument), "Segoe UI", sans-serif;
 
-  --radius-box: 0.75rem;
+  /* Classic corners: photos, cards, tables and panels are square; things you press or type
+     into get a gentle 6px corner; small notices 4px. Real circles stay round. */
+  --radius-box: 0;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0;
 
   --animate-press: press 0.7s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
   --animate-rise: rise 0.25s ease-out both;
@@ -26,10 +30,10 @@
   @keyframes unroll {
     0%,
     30% {
-      clip-path: inset(0 calc(100% - 9rem) 0 0 round 999px);
+      clip-path: inset(0 calc(100% - 9rem) 0 0 round 6px);
     }
     88% {
-      clip-path: inset(0 0 0 0 round 999px);
+      clip-path: inset(0 0 0 0 round 6px);
     }
     /* Let go of the clip at the end so the bar's soft shadow can show. */
     100% {
@@ -103,7 +107,7 @@
   :focus-visible {
     outline: 2px solid var(--color-lacquer);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 3px;
   }
   ::selection {
     background: var(--color-petal);
@@ -177,7 +181,7 @@
     gap: 0.5rem;
     min-height: 3rem;
     padding: 0.6rem 1.5rem;
-    border-radius: 999px;
+    border-radius: 6px;
     border: 1.5px solid var(--color-lacquer);
     background: var(--color-lacquer);
     color: #fff;
@@ -244,7 +248,7 @@
     width: 100%;
     min-height: 3rem;
     padding: 0.65rem 1rem;
-    border-radius: 0.6rem;
+    border-radius: 6px;
     border: 1.5px solid var(--color-petal);
     background: #fff;
     color: var(--color-wine);
@@ -285,7 +289,7 @@
     width: 1.25rem;
     height: 1.25rem;
     margin-top: 0.15rem;
-    border-radius: 0.35rem;
+    border-radius: 3px;
     border: 1.5px solid var(--color-rose);
     background: #fff;
   }
@@ -309,7 +313,7 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.2rem 0.65rem;
-    border-radius: 999px;
+    border-radius: 4px;
     font-size: 0.78rem;
     font-weight: 600;
     line-height: 1.4;
@@ -375,21 +379,31 @@
   }
   .table-x th {
     text-align: left;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.8rem;
-    color: var(--color-mauve);
-    padding: 0.75rem 1rem;
-    border-bottom: 1.5px solid var(--color-line);
+    color: var(--color-wine);
+    background: var(--color-blush);
+    padding: 0.6rem 1rem;
+    border-bottom: 1.5px solid var(--color-petal);
     white-space: nowrap;
   }
   .table-x td {
-    padding: 0.8rem 1rem;
+    padding: 0.55rem 1rem;
     border-bottom: 1px solid var(--color-line);
     vertical-align: middle;
   }
   .table-x tbody tr:hover {
     background: var(--color-blush);
   }
+}
+
+/* The admin is a working tool: denser controls than the storefront. */
+.admin .input {
+  min-height: 2.5rem;
+  padding: 0.4rem 0.85rem;
+}
+.admin .btn-sm {
+  min-height: 2.15rem;
 }
 
 /* Decorative backdrops: pink line art and paper grain laid behind a section's content.
@@ -456,32 +470,31 @@
 
 /* Scroll reveal: blocks glide in from the direction of travel and glide back out,
    whether the page is scrolled down or back up. Driven by components/Reveal.tsx. */
-.rv {
+:is(.rv, [data-arv]) {
   transition:
     opacity 0.75s cubic-bezier(0.2, 0.7, 0.1, 1),
     transform 0.75s cubic-bezier(0.2, 0.7, 0.1, 1);
   transition-delay: var(--rv-delay, 0ms);
-  will-change: opacity, transform;
 }
-.rv[data-rv="below"] {
+:is(.rv, [data-arv])[data-rv="below"] {
   opacity: 0;
   transform: translateY(3.5rem);
   transition-delay: 0ms;
 }
-.rv[data-rv="above"] {
+:is(.rv, [data-arv])[data-rv="above"] {
   opacity: 0;
   transform: translateY(-3.5rem);
   transition-delay: 0ms;
 }
 
 /* Other ways in: from the left, from the right, or growing from slightly small. */
-.rv[data-from="left"]:not([data-rv="in"]) {
+:is(.rv, [data-arv])[data-from="left"]:not([data-rv="in"]) {
   transform: translateX(-5rem);
 }
-.rv[data-from="right"]:not([data-rv="in"]) {
+:is(.rv, [data-arv])[data-from="right"]:not([data-rv="in"]) {
   transform: translateX(5rem);
 }
-.rv[data-from="zoom"]:not([data-rv="in"]) {
+:is(.rv, [data-arv])[data-from="zoom"]:not([data-rv="in"]) {
   transform: scale(0.86);
 }
 

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { discount, REVIEWS, THEMES, typeName, type Size } from "@/lib/data";
+import { discount, FINGERS, REVIEWS, SIZE_CHART, THEMES, typeName, type Size } from "@/lib/data";
 import { addToCart, useProducts } from "@/lib/store";
 import { Crumbs } from "./Bits";
 import { DemoForm } from "./Form";
@@ -62,7 +62,7 @@ export function ProductView({ slug }: { slug: string }) {
         <div>
           <div className="box aspect-square">
             {p.image ? <Photo src={p.image} sizes="(min-width: 1024px) 50vw, 100vw" zoom={shots[shot].zoom} origin={shots[shot].origin} priority /> : <ProductImage p={p} />}
-            {off > 0 && !out && <span className="absolute left-4 top-4 rounded-full bg-lacquer px-3 py-1.5 text-sm font-bold text-white">Save {off}%</span>}
+            {off > 0 && !out && <span className="absolute left-4 top-4 rounded-sm bg-lacquer px-3 py-1.5 text-sm font-bold text-white">Save {off}%</span>}
           </div>
           {shots.length > 0 && (
             <div className="mt-3 grid grid-cols-4 gap-3" role="group" aria-label="Product photos">
@@ -95,7 +95,7 @@ export function ProductView({ slug }: { slug: string }) {
               </legend>
               <div id="size-group" tabIndex={-1} className="mt-3 flex flex-wrap gap-2.5" aria-describedby={needSize && !size ? "size-err" : undefined}>
                 {p.sizes.map((s) => (
-                  <label key={s} className={`grid place-items-center h-12 min-w-14 px-4 rounded-full border-[1.5px] font-semibold cursor-pointer transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-lacquer ${size === s ? "border-lacquer bg-lacquer text-white" : "border-petal hover:border-rose"} ${out ? "opacity-50 pointer-events-none" : ""}`}>
+                  <label key={s} className={`grid place-items-center h-12 min-w-14 px-4 rounded-md border-[1.5px] font-semibold cursor-pointer transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-lacquer ${size === s ? "border-lacquer bg-lacquer text-white" : "border-petal hover:border-rose"} ${out ? "opacity-50 pointer-events-none" : ""}`}>
                     <input type="radio" name="size" value={s} className="sr-only" checked={size === s} disabled={out} onChange={() => setSize(s)} />
                     {s}
                   </label>
@@ -110,14 +110,14 @@ export function ProductView({ slug }: { slug: string }) {
           )}
 
           <div className="mt-7 flex flex-wrap gap-3">
-            <div className="flex items-center rounded-full border-[1.5px] border-petal" role="group" aria-label="Quantity">
-              <button className="grid place-items-center size-12 rounded-full text-xl hover:bg-blush disabled:text-petal" aria-label="Decrease quantity" disabled={qty <= 1 || out} onClick={() => setQty(qty - 1)}>
+            <div className="flex items-center rounded-md border-[1.5px] border-petal" role="group" aria-label="Quantity">
+              <button className="grid place-items-center size-12 rounded-md text-xl hover:bg-blush disabled:text-petal" aria-label="Decrease quantity" disabled={qty <= 1 || out} onClick={() => setQty(qty - 1)}>
                 −
               </button>
               <output className="w-8 text-center font-semibold" aria-live="polite">
                 {qty}
               </output>
-              <button className="grid place-items-center size-12 rounded-full text-xl hover:bg-blush disabled:text-petal" aria-label="Increase quantity" disabled={qty >= 10 || out} onClick={() => setQty(qty + 1)}>
+              <button className="grid place-items-center size-12 rounded-md text-xl hover:bg-blush disabled:text-petal" aria-label="Increase quantity" disabled={qty >= 10 || out} onClick={() => setQty(qty + 1)}>
                 +
               </button>
             </div>
@@ -151,6 +151,53 @@ export function ProductView({ slug }: { slug: string }) {
               ))}
             </dd>
           </dl>
+
+          {p.sizes.length > 0 && (
+            <div className="mt-8">
+              <div className="mb-2 flex items-baseline justify-between gap-3">
+                <h2 className="font-semibold">Size guide</h2>
+                <span className="text-sm text-mauve">Nail width in mm</span>
+              </div>
+              <div className="overflow-x-auto border-[1.5px] border-line">
+                <table className="w-full min-w-[20rem] text-center text-sm">
+                  <caption className="sr-only">Nail width in millimetres for each size of this set, thumb to pinky</caption>
+                  <thead className="bg-blush">
+                    <tr>
+                      <th scope="col" className="px-3 py-2 text-left font-semibold">
+                        Size
+                      </th>
+                      {FINGERS.map((f) => (
+                        <th key={f} scope="col" className="px-2 py-2 font-semibold">
+                          {f}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {p.sizes.map((s) => (
+                      <tr key={s} className={`border-t border-line ${size === s ? "bg-petal font-semibold" : ""}`}>
+                        <th scope="row" className="px-3 py-2 text-left font-semibold">
+                          {s}
+                          {size === s && <span className="sr-only"> (selected)</span>}
+                        </th>
+                        {SIZE_CHART[s].map((mm, i) => (
+                          <td key={i} className="px-2 py-2">
+                            {mm}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="mt-2 text-sm text-mauve">
+                Between two sizes? Choose the larger one.{" "}
+                <Link href="/sizing-chart" className="link">
+                  How to measure
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -171,7 +218,7 @@ export function ProductView({ slug }: { slug: string }) {
         {tab === "info" ? (
           <div role="tabpanel" id="panel-info" aria-labelledby="tab-info" className="pt-8 max-w-3xl">
             <dl className="divide-y divide-line">
-              {[...p.info, ...(p.sizes.length ? ([["Sizes", p.sizes.join(", ")]] as [string, string][]) : [])].map(([k, v]) => (
+              {[...p.info, ...(p.sizes.length && !p.info.some(([k]) => k === "Sizes") ? ([["Sizes", p.sizes.join(", ")]] as [string, string][]) : [])].map(([k, v]) => (
                 <div key={k} className="grid gap-1 py-3.5 sm:grid-cols-[12rem_1fr]">
                   <dt className="font-semibold">{k}</dt>
                   <dd className="text-mauve">{v}</dd>

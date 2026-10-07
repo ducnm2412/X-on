@@ -91,10 +91,10 @@ export function ContentAdmin() {
                     <h3 className="font-semibold">{s.label}</h3>
                     {!s.visible && <span className="chip chip-mute">Hidden on site</span>}
                     <div className="ml-auto flex items-center gap-1">
-                      <button className="grid place-items-center size-9 rounded-full hover:bg-blush disabled:text-petal disabled:hover:bg-transparent" aria-label={`Move ${s.label} up`} disabled={i === 0} onClick={() => move(i, -1)}>
+                      <button className="grid place-items-center size-9 rounded-md hover:bg-blush disabled:text-petal disabled:hover:bg-transparent" aria-label={`Move ${s.label} up`} disabled={i === 0} onClick={() => move(i, -1)}>
                         ↑
                       </button>
-                      <button className="grid place-items-center size-9 rounded-full hover:bg-blush disabled:text-petal disabled:hover:bg-transparent" aria-label={`Move ${s.label} down`} disabled={i === page.sections.length - 1} onClick={() => move(i, 1)}>
+                      <button className="grid place-items-center size-9 rounded-md hover:bg-blush disabled:text-petal disabled:hover:bg-transparent" aria-label={`Move ${s.label} down`} disabled={i === page.sections.length - 1} onClick={() => move(i, 1)}>
                         ↓
                       </button>
                       <span className="ml-2 text-sm text-mauve">Visible</span>

@@ -179,7 +179,7 @@ export function ProductsAdmin() {
 
       {rows.length ? (
         <TableWrap>
-          <table className="table-x min-w-[56rem]">
+          <table className="table-x min-w-[40rem] lg:min-w-0 [&_td]:px-3 [&_th]:px-3 xl:[&_td]:px-4 xl:[&_th]:px-4">
             <thead>
               <tr>
                 <th className="w-10">
@@ -188,9 +188,9 @@ export function ProductsAdmin() {
                 <th>Product</th>
                 <th>Price</th>
                 <th>Type</th>
-                <th>Stock</th>
+                <th className="hidden xl:table-cell">Stock</th>
                 <th>Status</th>
-                <th>Updated</th>
+                <th className="hidden 2xl:table-cell">Updated</th>
                 <th className="!text-right">Actions</th>
               </tr>
             </thead>
@@ -205,7 +205,7 @@ export function ProductsAdmin() {
                       <div className="box size-12 shrink-0 !rounded-lg">
                         <ProductImage p={p} sizes="48px" />
                       </div>
-                      <div className="whitespace-nowrap">
+                      <div className="min-w-0">
                         <p className="font-semibold">{p.name}</p>
                         <p className="text-sm text-mauve">{p.sku}</p>
                       </div>
@@ -220,17 +220,18 @@ export function ProductsAdmin() {
                       <span className="font-semibold">{money(p.price)}</span>
                     )}
                   </td>
-                  <td className="whitespace-nowrap">
+                  <td>
                     {typeName(p.type)}
                     {p.shape && <span className="block text-sm text-mauve">{p.shape}</span>}
                   </td>
-                  <td>{p.stock}</td>
+                  <td className="hidden xl:table-cell">{p.stock}</td>
                   <td>
                     <Status value={p.status} />
+                    <span className="mt-1 block text-sm text-mauve xl:hidden">{p.stock} in stock</span>
                   </td>
-                  <td className="whitespace-nowrap text-mauve">{p.updated}</td>
+                  <td className="hidden whitespace-nowrap text-mauve 2xl:table-cell">{p.updated}</td>
                   <td>
-                    <div className="flex justify-end gap-3 whitespace-nowrap">
+                    <div className="flex justify-end gap-2.5 whitespace-nowrap">
                       <Link href={`/product/${p.slug}`} className="link" aria-label={`View ${p.name} in the shop`}>
                         View
                       </Link>

@@ -31,7 +31,6 @@ const COLS = [
       ["/cart", "Cart"],
       ["/legal/terms", "Terms of service"],
       ["/legal/privacy", "Privacy policy"],
-      ["/admin", "Admin demo"],
     ],
   },
 ];
